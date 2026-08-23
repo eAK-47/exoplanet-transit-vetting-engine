@@ -187,6 +187,12 @@ def audit_api_contract(verification: Verification) -> None:
     from types import SimpleNamespace
 
     server = importlib.import_module("src.api.server")
+    
+    # Skip test if inference engine isn't available (torch not installed)
+    if not server.INFERENCE_AVAILABLE:
+        verification.skip("API process contract", "PyTorch not available (expected in main CI, run gpu-test.yml for full API testing)")
+        return
+    
     ingestion = server._ingestion_engine
     original = dict(server.session_cache)
     image_path = Path(tempfile.gettempdir()) / "vikramadithya_api_contract.png"

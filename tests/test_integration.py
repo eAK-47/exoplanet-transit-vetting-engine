@@ -16,15 +16,23 @@ class TestModuleIntegration:
         """Test that all core modules can be imported successfully"""
         try:
             from src.pipeline.ingestion import TESSIngestionEngine
-            from src.models.inference import SwinTransitClassifier, VikramadithyaInferenceEngine
             from src.api.server import app
             
             assert TESSIngestionEngine is not None
-            assert SwinTransitClassifier is not None
-            assert VikramadithyaInferenceEngine is not None
             assert app is not None
             
-            print("✓ All modules imported successfully")
+            # Try to import model classes, but skip if torch not available
+            try:
+                from src.models.inference import SwinTransitClassifier, VikramadithyaInferenceEngine
+                assert SwinTransitClassifier is not None
+                assert VikramadithyaInferenceEngine is not None
+                print("✓ All modules imported successfully (including PyTorch)")
+            except ImportError as e:
+                if "torch" in str(e).lower():
+                    pytest.skip("PyTorch not available (expected in main CI)")
+                else:
+                    raise
+            
         except ImportError as e:
             pytest.fail(f"Failed to import modules: {e}")
     

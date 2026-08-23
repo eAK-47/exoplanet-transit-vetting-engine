@@ -12,7 +12,17 @@ import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from src.pipeline.ingestion import TESSIngestionEngine
-from src.models.inference import VikramadithyaInferenceEngine
+
+# Import inference engine with graceful fallback if torch isn't available
+try:
+    from src.models.inference import VikramadithyaInferenceEngine
+    INFERENCE_AVAILABLE = True
+except ImportError as e:
+    if "torch" in str(e).lower():
+        INFERENCE_AVAILABLE = False
+        VikramadithyaInferenceEngine = None
+    else:
+        raise
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("api")
@@ -48,7 +58,8 @@ app.add_middleware(
 
 # Global state (in-memory cache per session)
 _ingestion_engine = TESSIngestionEngine()
-_inference_engine = VikramadithyaInferenceEngine()
+# Initialize inference engine only if PyTorch is available
+_inference_engine = VikramadithyaInferenceEngine() if INFERENCE_AVAILABLE else None
 
 # Session cache
 session_cache = {
