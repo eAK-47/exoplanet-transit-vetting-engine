@@ -56,7 +56,14 @@ def finite(value: Any) -> bool:
 
 
 def audit_catalog(verification: Verification) -> None:
-    inference = importlib.import_module("src.models.inference")
+    try:
+        inference = importlib.import_module("src.models.inference")
+    except ImportError as e:
+        if "torch" in str(e).lower():
+            verification.skip("Catalog and KNN", "PyTorch not available (expected in main CI, run gpu-test.yml for full verification)")
+            return
+        raise
+    
     dataframe = inference._load_exoplanet_catalog()
     if dataframe is None or dataframe.empty:
         raise AssertionError("local exoplanet catalog did not load")
@@ -145,7 +152,11 @@ def audit_live_ingestion(verification: Verification) -> None:
 
 
 def audit_gpu_and_model(verification: Verification) -> None:
-    import torch
+    try:
+        import torch
+    except ImportError:
+        verification.skip("GPU and model", "PyTorch not available (expected in main CI, run gpu-test.yml for full GPU testing)")
+        return
 
     if not torch.cuda.is_available():
         verification.skip("GPU and model", "CUDA is not available in this environment")
