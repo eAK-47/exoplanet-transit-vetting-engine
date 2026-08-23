@@ -358,11 +358,11 @@ Contributions are welcome! Please follow these guidelines:
 If you use INS Vikramadithya in your research, please cite:
 
 ```bibtex
-@software{vikramadithya2024,
+@software{vikramadithya2026,
   title={INS Vikramadithya: Physics-Informed TESS Exoplanet Transit Vetting Engine},
-  author={Your Name},
-  year={2024},
-  url={https://github.com/yourusername/INS-Vikramadithya}
+  author={AKASH S KISHOR},
+  year={2026},
+  url={[https://github.com/eAK-47/exoplanet-transit-vetting-engine](https://github.com/eAK-47/exoplanet-transit-vetting-engine)}
 }
 ```
 
@@ -381,11 +381,10 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
 ## Contact & Support
 
 For questions, bug reports, or collaboration inquiries:
-- 📧 Email: your.email@example.com
-- 🐦 Twitter: [@yourhandle](https://twitter.com/yourhandle)
-- 🔬 GitHub Issues: [Report a bug](https://github.com/yourusername/INS-Vikramadithya/issues)
+- 📧 Email: akashskishor01@gmail.com
+- 🔬 GitHub Issues: [Report a bug](https://github.com/eAK-47/exoplanet-transit-vetting-engine/issues/new)
 
 ---
 
-**Last Updated**: August 2024  
-**Maintained by**: INS Vikramadithya Team
+**Last Updated**: August 2026  
+
