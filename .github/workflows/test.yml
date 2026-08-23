@@ -25,8 +25,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt
+        # Install core dependencies without heavy packages for faster CI
         pip install pytest pytest-asyncio pytest-cov
+        pip install astropy astroquery lightkurve pandas numpy scikit-learn
+        pip install fastapi uvicorn pydantic
+        # Skip PyTorch in CI to avoid timeout issues
+        # torch, torchvision, transformers can be tested separately with GPU runners
     
     - name: Run system verification
       run: python test_system.py

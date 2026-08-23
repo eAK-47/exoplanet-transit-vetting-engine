@@ -19,8 +19,12 @@ class TestSwinTransitClassifier:
         except ImportError as e:
             pytest.fail(f"Failed to import SwinTransitClassifier: {e}")
     
+    @pytest.mark.gpu
     def test_inference_engine_import(self):
-        """Test that VikramadithyaInferenceEngine can be imported"""
+        """Test that VikramadithyaInferenceEngine can be imported
+        
+        Marked as GPU test because it depends on PyTorch imports.
+        """
         try:
             from src.models.inference import VikramadithyaInferenceEngine
             assert VikramadithyaInferenceEngine is not None
