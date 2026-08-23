@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Enable version updates for dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+    open-pull-requests-limit: 10
+    pull-request-branch-name:
+      separator: "/"
+    commit-message:
+      prefix: "chore"
+      prefix-scope: "deps"
+    reviewers:
+      - "eAK-47"
+    labels:
+      - "dependencies"
+      - "python"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+    pull-request-branch-name:
+      separator: "/"
+    labels:
+      - "ci"
+      - "github-actions"
