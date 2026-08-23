@@ -1,0 +1,97 @@
+# Virtual Environments
+env_vikram/
+venv/
+env/
+.venv/
+ENV/
+
+# Python Runtime Caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments from PyEnv
+.python-version
+
+# Data & Cache
+data/cache/
+data/mastDownload/
+*.fits
+*.fits.gz
+
+# Model Checkpoints & Weights (large binary files)
+*.pth
+*.pt
+*.bin
+*.h5
+*.ckpt
+*.pkl
+*.pickle
+
+# Temporary Files & Figures
+*.png
+*.jpg
+*.jpeg
+*.gif
+temp_*
+*.tmp
+*.log
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.vscode-server/
+.env.local
+.env.*.local
+
+# OS Artifacts
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Distribution & Packaging
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# MCP or other local tools
+.mcp/
+*.lock

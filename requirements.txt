@@ -1,0 +1,35 @@
+# Core Deep Learning & Vision
+torch==2.4.0
+torchvision==0.19.0
+torchaudio==2.4.0
+transformers==4.41.2
+accelerate==0.31.0
+
+# Astrophysics & Data Science
+lightkurve==2.4.0
+astropy==6.1.0
+astroquery==0.4.6
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.5.1
+
+# Image Processing & Plotting
+Pillow==10.4.0
+matplotlib==3.9.2
+plotly==5.24.0
+
+# API & Server
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+pydantic==2.9.2
+python-multipart==0.0.7
+
+# Utilities & Testing
+python-dotenv==1.0.1
+pytest==7.4.4
+pytest-asyncio==0.24.0
+
+# Optional: Development tools
+black==24.4.2
+flake8==7.1.1
+mypy==1.11.1
