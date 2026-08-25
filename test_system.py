@@ -56,14 +56,11 @@ def finite(value: Any) -> bool:
 
 
 def audit_catalog(verification: Verification) -> None:
-    try:
-        inference = importlib.import_module("src.models.inference")
-    except ImportError as e:
-        if "torch" in str(e).lower():
-            verification.skip("Catalog and KNN", "PyTorch not available (expected in main CI, run gpu-test.yml for full verification)")
-            return
-        raise
-    
+    inference = importlib.import_module("src.models.inference")
+    if not inference._TORCH_AVAILABLE:
+        verification.skip("Catalog and KNN", "PyTorch not available (expected in main CI, run gpu-test.yml for full verification)")
+        return
+
     dataframe = inference._load_exoplanet_catalog()
     if dataframe is None or dataframe.empty:
         raise AssertionError("local exoplanet catalog did not load")

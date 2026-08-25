@@ -13,16 +13,15 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 
 from src.pipeline.ingestion import TESSIngestionEngine
 
-# Import inference engine with graceful fallback if torch isn't available
-try:
-    from src.models.inference import VikramadithyaInferenceEngine
-    INFERENCE_AVAILABLE = True
-except ImportError as e:
-    if "torch" in str(e).lower():
-        INFERENCE_AVAILABLE = False
-        VikramadithyaInferenceEngine = None
-    else:
-        raise
+# Import inference engine with graceful fallback if torch isn't available.
+# The module itself is importable without torch (classes are defined),
+# but instantiation raises ImportError — so we check the availability flag
+# from the inference module rather than just the import success.
+from src.models.inference import VikramadithyaInferenceEngine, _TORCH_AVAILABLE
+
+INFERENCE_AVAILABLE = _TORCH_AVAILABLE
+if not INFERENCE_AVAILABLE:
+    VikramadithyaInferenceEngine = None
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("api")
@@ -58,8 +57,11 @@ app.add_middleware(
 
 # Global state (in-memory cache per session)
 _ingestion_engine = TESSIngestionEngine()
-# Initialize inference engine only if PyTorch is available
-_inference_engine = VikramadithyaInferenceEngine() if INFERENCE_AVAILABLE else None
+# Initialize inference engine only if PyTorch is available.
+# VikramadithyaInferenceEngine is None when torch is absent (set above).
+_inference_engine = None
+if INFERENCE_AVAILABLE:
+    _inference_engine = VikramadithyaInferenceEngine()
 
 # Session cache
 session_cache = {
