@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 # ---------------------------------------------------------------------------
 # Lazy imports for heavy ML dependencies (torch, transformers).
 # The module must be importable in CI without these installed — tests and the
