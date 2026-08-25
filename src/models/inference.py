@@ -1,14 +1,37 @@
+# ---------------------------------------------------------------------------
+# Lazy imports for heavy ML dependencies (torch, transformers).
+# The module must be importable in CI without these installed — tests and the
+# API server import this module at module level, so we cannot hard-import at
+# top scope. Instead we set availability flags and raise clear errors when
+# ML functionality is requested without the dependencies.
+# ---------------------------------------------------------------------------
+
+try:
+    import torch
+    import torch.nn as nn
+    _TORCH_AVAILABLE = True
+except ImportError:
+    torch = None           # type: ignore[assignment]
+    nn = None              # type: ignore[assignment]
+    _TORCH_AVAILABLE = False
+
+try:
+    from transformers import SwinModel, AutoImageProcessor
+    _TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    SwinModel = None       # type: ignore[assignment]
+    AutoImageProcessor = None  # type: ignore[assignment]
+    _TRANSFORMERS_AVAILABLE = False
+
+# Non-ML dependencies are cheap enough to import eagerly.
 import os
 import logging
 from typing import Dict, Any, List, Tuple, Optional
-import torch
-import torch.nn as nn
 from PIL import Image
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import RobustScaler
 from sklearn.neighbors import NearestNeighbors
-from transformers import SwinModel, AutoImageProcessor
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -59,13 +82,27 @@ _FALLBACK_CATALOG = [
 ]
 
 
-class SwinTransitClassifier(nn.Module):
+# Base class for SwinTransitClassifier — uses nn.Module when torch is available,
+# or object as a fallback so the module can be imported without torch.
+_SwinTransitClassifierBase = nn.Module if _TORCH_AVAILABLE else object
+
+class SwinTransitClassifier(_SwinTransitClassifierBase):
     """
     Swin Transformer backbone classifier for 2D transit morphology analysis.
     Outputs binary probability: Planet vs. Astrophysical False Positive.
     """
     def __init__(self, pretrained_model_name: str = 'microsoft/swin-tiny-patch4-window7-224'):
         super().__init__()
+        if not _TORCH_AVAILABLE:
+            raise ImportError(
+                "PyTorch is required to use SwinTransitClassifier. "
+                "Install it with: pip install torch torchvision"
+            )
+        if not _TRANSFORMERS_AVAILABLE:
+            raise ImportError(
+                "transformers is required to use SwinTransitClassifier. "
+                "Install it with: pip install transformers"
+            )
         logger.info(f"Initializing Swin Transformer backbone: {pretrained_model_name}")
         self.backbone = SwinModel.from_pretrained(pretrained_model_name)
         hidden_size = self.backbone.config.hidden_size
@@ -164,6 +201,11 @@ class VikramadithyaInferenceEngine:
     and match exoplanets against historical records using KNN.
     """
     def __init__(self, model_name: str = 'microsoft/swin-tiny-patch4-window7-224'):
+        if not _TORCH_AVAILABLE:
+            raise ImportError(
+                "PyTorch is required to use VikramadithyaInferenceEngine. "
+                "Install it with: pip install torch torchvision"
+            )
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logger.info(f"Inference Engine running on device: {self.device}")
 
