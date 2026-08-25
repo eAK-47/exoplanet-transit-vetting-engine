@@ -292,11 +292,10 @@ class VikramadithyaInferenceEngine:
     #  Inference
     # ------------------------------------------------------------------
 
-    @torch.no_grad()
     def evaluate_image(self, img_path: str) -> Dict[str, float]:
         """
-        Processes the generated 2D transit morphology image using torch.cuda.amp.autocast()
-        for Mixed Precision (FP16) compute optimization.
+        Processes the generated 2D transit morphology image using
+        torch.cuda.amp.autocast() for Mixed Precision (FP16) compute optimization.
         """
         logger.info(f"Evaluating transit morphology image: {img_path}")
         if not os.path.exists(img_path):
@@ -324,8 +323,9 @@ class VikramadithyaInferenceEngine:
         use_amp = (self.device.type == "cuda")
 
         with torch.amp.autocast("cuda", enabled=use_amp):
-            logits = self.model(pixel_values)
-            probabilities = torch.softmax(logits, dim=-1).squeeze().cpu().numpy()
+            with torch.no_grad():
+                logits = self.model(pixel_values)
+                probabilities = torch.softmax(logits, dim=-1).squeeze().cpu().numpy()
 
         # Class 0: Planet, Class 1: False Positive
         planet_conf = float(probabilities[0])
