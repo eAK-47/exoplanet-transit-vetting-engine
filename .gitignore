@@ -86,6 +86,9 @@ htmlcov/
 .tox/
 .hypothesis/
 
+# Generated synthetic data (large binary, not needed for CI or source)
+data/synthetic/*.npy
+
 # Distribution & Packaging
 dist/
 build/
